@@ -3,7 +3,7 @@ require 'twitter'
 
 def return_client_object()
   Dotenv.load('.env') 
-client = Twitter::REST::Client.new do |config|
+  client = Twitter::REST::Client.new do |config|
   config.consumer_key        = ENV["TWITTER_CONSUMER_KEY"]
   config.consumer_secret     = ENV["TWITTER_CONSUMER_SECRET"]
   config.access_token        = ENV["TWITTER_ACCESS_TOKEN"]
@@ -13,14 +13,14 @@ return client
 end
 client = return_client_object
  
-def select_20_tweets(client)
-  client.search("\#bonjour_monde").take(20).collect {|tweet| tweet.id}
-end
-
-def like_bonjour_monde(select_20_tweets, client)
-  select_25_tweets.each do |tweet|
-  client.follow(tweet.user.id)
+def follow_20_bonjour_monde(client)
+  results = client.search("#bonjour_monde", result_type: "recent").take(20)
+  results.each do |tweet|
+  client.follow(:screen_name => tweet.user.screen_name)
   end
 end
 
-like_bonjour_monde(select_20_tweets(client), client)
+follow_bonjour_monde(client)
+
+#Trop de requetes avec l'api, bloqué par twitter...
+
